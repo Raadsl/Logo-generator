@@ -1,0 +1,13 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+craiyon/__init__.py
+craiyon/craiyon.py
+craiyon/templates.py
+craiyon.py.egg-info/PKG-INFO
+craiyon.py.egg-info/SOURCES.txt
+craiyon.py.egg-info/dependency_links.txt
+craiyon.py.egg-info/not-zip-safe
+craiyon.py.egg-info/requires.txt
+craiyon.py.egg-info/top_level.txt

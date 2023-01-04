@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ favi }}" />
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+    <title>{{ title }} - editor</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ favi }}" />
+    <style>
+      body {
+        background: #f6f6f6;
+      }
+      .text-center {
+        padding: 128px 32px;
+        background: #fff;
+        border-radius: 32px;
+        border: 1px solid #eaeaea;
+        box-shadow: 0 8px 16px rgb(0 0 0 / 4%);
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  
+
+    
+<script>
+$(document).ready(function() {
+    $(function() { 
+        $('#theText').draggable({
+            containment: 'parent'
+        }); 
+    });
+});
+
+    // Make the text element draggable.
+    $(document).ready(function() {
+        $(function() { 
+            $('#theText').draggable({
+                containment: 'parent'     // set draggable area.
+            }); 
+        });
+    });
+    // Select image and show it.
+    let chooseImage = () => {
+    	document.getElementById('file').click();
+    }
+
+    let showImage = (fl) => {
+        if (fl.files.length > 0) {
+            let reader  = new FileReader();
+
+            reader.onload = function (e) {
+                let img = new Image();
+                
+                img.onload = function () {
+                    if (this.width > screen.width || this.height > screen.height) {
+                        alert('Please select a small image. The image width and height should be less than the screen width and height.');
+
+                        document.getElementById('theText').style.display = 'none';
+                        document.getElementById('bt').style.display = 'none';
+                        document.getElementById('textArea').style.display = 'none';
+                        document.getElementById('myimage').src = '';
+                    }
+                    else {
+                        document.getElementById('theText').style.display = 'block';
+                        document.getElementById('bt').style.display = 'block';
+                        document.getElementById('textArea').style.display = 'block';
+                    }
+                }
+
+                img.src = e.target.result;      // actual image. 
+                document.getElementById('myimage').src = reader.result;  // Add the image on the form.
+            };
+            reader.readAsDataURL(fl.files[0]);
+        }
+    }
+
+    let textContainer;
+    let t = 'sample text';
+
+    // Get the values that you have entered in the textarea and
+    // write it in the DIV over the image.
+
+    let writeText = (ele) => {
+        t = ele.value;
+        document.getElementById('theText').innerHTML = t.replace(/\n\r?/g, '<br />');
+    }
+ 
+    // Finally, save the image with text over it.
+    let saveImageWithText = () => {
+        textContainer = document.getElementById('theText');     // The element with the text.
+    
+        // Create an image object.
+        let img = new Image();
+        img.src = document.getElementById('myimage').src;
+       
+        // Create a canvas object.
+        let canvas = document.createElement("canvas");
+        
+        // Wait till the image is loaded.
+        img.onload = function(){
+            drawImage();
+            downloadImage(img.src.replace(/^.*[\\\/]/, ''));    // Download the processed image.
+        }
+        
+        // Draw the image on the canvas.
+        let drawImage = () => {
+            let ctx = canvas.getContext("2d");	// Create canvas context.
+
+            // Assign width and height.
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+          	// Draw the image.
+            ctx.drawImage(img, 0, 0);
+            
+            textContainer.style.border = 0;
+            
+            // Get the padding etc.
+            let left = parseInt(window.getComputedStyle(textContainer).left);
+            let right = textContainer.getBoundingClientRect().right;
+            let top = parseInt(window.getComputedStyle(textContainer).top, 0);
+            let center = textContainer.getBoundingClientRect().width / 2;
+
+            let paddingTop = window.getComputedStyle(textContainer).paddingTop.replace('px', '');
+            let paddingLeft = window.getComputedStyle(textContainer).paddingLeft.replace('px', '');
+            let paddingRight = window.getComputedStyle(textContainer).paddingRight.replace('px', '');
+            
+            // Get text alignement, colour and font of the text.
+            let txtAlign = window.getComputedStyle(textContainer).textAlign;
+            let color = window.getComputedStyle(textContainer).color;
+            let fnt = window.getComputedStyle(textContainer).font;
+           
+            // Assign text properties to the context.
+            ctx.font = fnt;
+            ctx.fillStyle = color;
+            ctx.textAlign = txtAlign;
+			
+            // Now, we need the coordinates of the text.
+            let x; 		// coordinate.
+            if (txtAlign === 'right') {
+            	x = right + parseInt(paddingRight) - 11;
+            }
+            if (txtAlign === 'left') {
+            	x = left + parseInt(paddingLeft);
+            }
+            if (txtAlign === 'center') {
+            	x = center + left;
+            }
+
+            // Get the text (it can a word or a sentence) to write over the image.
+            let str = t.replace(/\n\r?/g, '<br />').split('<br />');
+
+            // finally, draw the text using Canvas fillText() method.
+            for (let i = 0; i <= str.length - 1; i++) {
+            	
+                ctx.fillText(
+                    str[i]
+                        .replace('</div>','')
+                        .replace('<br>', '')
+                        .replace(';',''), 
+                    x, 
+                    parseInt(paddingTop, 10) + parseInt(top, 10) + 10 + (i * 15));
+            }
+
+            // document.body.append(canvas);  // Show the image with the text on the Canvas.
+        }
+
+        // Download the processed image.
+        let downloadImage = (img_name) => {
+            let a = document.createElement('a');
+            a.href = canvas.toDataURL("image/png");
+            a.download = img_name;
+            document.body.appendChild(a);
+            a.click();        
+        }
+    }
+
+</script>
+</html>
+  </script>
+    
+    <style>
+
+:root {
+  --text: #02ce00;
+}
+      
+.mainContainer {
+    position: relative;
+    padding: 0;
+    min-width: 250px;
+    min-height: 250px;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+img {border: none; max-width: 100%;}
+
+#textArea {
+    display: block;
+    padding: 10px 5px;
+}
+
+#theText {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    background: #000;
+    background: rgba(0, 0, 0, 0.1);
+    color: --text;
+    width: auto;
+    padding: 5px;
+    text-align: left;
+    border: dashed 2px #ff7f27;
+    font: 15px Calibri;
+    display: block;
+    cursor: move;
+}
+        
+        canvas {max-width: 100%;}
+    </style>
+</head>
+<body>
+  <main>
+    
+    <div
+        class="d-flex align-items-center justify-content-center"
+        style="height: 90vh"
+      >
+      <div class="text-center mb-4">
+        <h1>Add text to your image</h1>
+        <p>I recommend using another editor like <a href='https://canva.com'>Canva</a></p>
+  <!--File upload-->
+  <p>
+    <input type="submit" class="btn btn-lg btn-primary btn-block" id="btChooseImage" onclick='chooseImage()' value="Select an image" />
+    
+  </p>
+  <input type="file" id="file" onchange="showImage(this)" 
+     style="display: none; visibility: hidden; width: 1px;" />
+
+  <!--Textarea to enter some texts.-->
+  <p>
+     <textarea onkeyup='writeText(this)' id='textArea' 
+         placeholder='Enter some value for text' value='Company name' rows='2' cols='50'>
+     </textarea>
+  </p>
+
+  <div>
+     <!--The parent container, image and container for text (to place over the image)-->
+     <div class="mainContainer" id='mainContainer'>
+       <!--The default image. You can select a different image too.-->
+       
+       <img src='https://cdn.discordapp.com/attachments/963507913660440726/1057738904305934426/output.png' id="myimage" alt="Editted Image" />
+            
+       <!--The text, which is also draggable.-->
+       <div id='theText' onmousedown='this.style.border = "dashed 2px #FF7F27";'>Company name</div>
+     </div>
+
+     <!--Button to save the image with the text.--><br>
+     <p><input class="btn btn-lg btn-primary btn-block" type="button" onclick="saveImageWithText();" id="bt" value="Download the Image" /></p>
+       <footer>
+         <p>
+           <a class="link-primary" href='/'>Generate more logo's</a>
+         </p>
+       </footer>
+  </div>
+    </div>
+    </div>
+  </main>
+</body>
