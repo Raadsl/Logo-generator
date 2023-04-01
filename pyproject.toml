@@ -1,18 +1,14 @@
 [tool.poetry]
-name = "python-template"
-version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+name = "Logo generator"
+version = "1.0.0"
+description = "Uses an AI create a good prompt to generate logo's using DALL-E. I made this for FourweekMBA so they have all the rights to the code."
+authors = ["Jorik Loos - <gh[at]jorik.email"]
 
 [tool.poetry.dependencies]
 python = ">=3.8.0,<3.9"
-numpy = "^1.22.2"
 replit = "^3.2.4"
 Flask = "^2.2.0"
 urllib3 = "^1.26.12"
-dalle2 = "^1.0.11"
-Pillow = "^9.3.0"
-"craiyon.py" = "^0.1.0"
 openai = "^0.25.0"
 waitress = "^2.1.2"
 

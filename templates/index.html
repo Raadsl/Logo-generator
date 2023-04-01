@@ -9,6 +9,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" sizes="32x32" href="{{ favi }}" />
     <style>
+      raadsel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f5f5f5;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        color: #999;
+      }
+      
+      .made-by {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      
+      .made-by img {
+        margin-left: 5px;
+        height: 30px;
+      }
       body {
         background: #f6f6f6;
       }
@@ -35,17 +56,27 @@
             
             <input type="text" class="form-control" id='prompt' size="30" placeholder="Generate a logo for..." aria-label="Generate a logo for..." aria-describedby="basic-addon2">
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary" onclick='gen()' type="button">Generate</button>
+              <button id='submit' class="btn btn-outline-secondary" onclick='gen()' type="button">Generate</button>
             </div>
           </div>
           <p>Click here for a <a href='#random-prompt' onclick='random()'>random prompt</a></p>
         </div>
       </div>
+      <raadsel>
+        <div class="made-by">
+          <p>Made by</p>
+          <a href='https://raadsel.is-a.dev/'>
+            <img src="https://raadsl.github.io/assets/Jorik-Loos-signature.png" alt="Jorik Loos' Signature">
+          </a>
+        </div>
+      </raadsel>
     </main>
+    
   </body>
   <script>
 function gen() {
   description = document.getElementById('prompt').value
+  document.getElementById('prompt').disabled = true;
   console.log(description)
   if(!description == '') {
     document.getElementById('loading').src = `https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif`
@@ -78,5 +109,13 @@ function random() {
     })
     .catch(error => console.error(error));
 }
+
+var input = document.getElementById("prompt");
+input.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("submit").click();
+  }
+});
   </script>
 </html>

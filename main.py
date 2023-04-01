@@ -2,8 +2,9 @@ import requests, os, glob, json, base64, time
 import openai
 from utils import delete, upload_file, gpt, dalle1, dalle2, convertFromSeconds # API AI
 openai.api_key = os.getenv("API_KEY")
-
-REPLURL = f"{os.environ['REPL_SLUG']}.{os.environ['REPL_OWNER']}.repl.co" # used to get the images from an URL.
+try:
+  REPLURL = f"{os.environ['REPL_SLUG']}.{os.environ['REPL_OWNER']}.repl.co" # used to get the images from an URL.
+except: REPLURL = "0.0.0.0"
 
 # FLASK
 try:

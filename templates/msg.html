@@ -19,6 +19,27 @@
         border: 1px solid #eaeaea;
         box-shadow: 0 8px 16px rgb(0 0 0 / 4%);
       }
+      raadsel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f5f5f5;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        color: #999;
+      }
+      
+      .made-by {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      
+      .made-by img {
+        margin-left: 5px;
+        height: 30px;
+      }
     </style>
   </head>
   <body>
@@ -35,6 +56,14 @@
           {% endif %}
         </div>
       </div>
+      <raadsel>
+        <div class="made-by">
+          <p>Made by</p>
+          <a href='https://raadsel.is-a.dev/'>
+            <img src="https://raadsl.github.io/assets/Jorik-Loos-signature.png" alt="Jorik Loos' Signature">
+          </a>
+        </div>
+      </raadsel>
     </main>
   </body>
 </html>
